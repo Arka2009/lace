@@ -70,6 +70,7 @@ void usage(char *s)
 
 int main(int argc, char *argv[])
 {
+    double t1 = wctime();
     int workers = 1;
     int dqsize = 100000;
 
@@ -106,15 +107,16 @@ int main(int argc, char *argv[])
 
     printf("running queens %d with %d workers...\n", n, workers);
 
-    double t1 = wctime();
+    //double t1 = wctime();
     uint64_t res = CALL(nqueens, n, 0, a);
-    double t2 = wctime();
+    //double t2 = wctime();
 
     printf("Result: Q(%d) = %lu\n", n, res);
 
-    printf("Time: %f\n", t2-t1);
+    //printf("Time: %f\n", t2-t1);
 
     lace_exit();
-
+    double t2 = wctime();
+    printf("Time: %f\n", t2-t1);
     return 0;
 }

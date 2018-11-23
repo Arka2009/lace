@@ -32,6 +32,8 @@ if(LACE_USE_HWLOC)
     find_package(Hwloc REQUIRED)
 endif()
 
+#find_package(ecotools REQUIRED)
+
 add_library(lace lace.c lace.h)
 target_include_directories(lace PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
 target_compile_options(lace PRIVATE -Wall -Wextra -Werror -fno-strict-aliasing)

@@ -37,7 +37,8 @@ double wctime()
 {
     struct timeval tv;
     gettimeofday(&tv, NULL);
-    return (tv.tv_sec + 1E-6 * tv.tv_usec);
+    //return (tv.tv_sec + 1E-6 * tv.tv_usec);
+    return (tv.tv_sec * 1E6 + tv.tv_usec);
 }
 
 void usage(char *s)
@@ -45,8 +46,10 @@ void usage(char *s)
     fprintf(stderr, "%s -w <workers> [-q dqsize] <depth> <width> <grain> <reps>\n", s);
 }
 
+
 int main(int argc, char **argv)
 {
+    //double t1 = wctime();
     int workers = 1;
     int dqsize = 100000;
 
@@ -90,9 +93,10 @@ int main(int argc, char **argv)
     for(i=0; i<m; i++) CALL(tree, d);
     double t2 = wctime();
 
-    printf("Time: %f\n", t2-t1);
+    //printf("Time: %f\n", t2-t1);
 
     lace_exit();
-
+    //double t2 = wctime();
+    printf("Time,%f\n", t2-t1);
     return 0;
 }
