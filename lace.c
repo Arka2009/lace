@@ -28,6 +28,7 @@
 #include <assert.h>
 
 #include <lace.h>
+#include <ecotools/cpu_uarch.h>
 
 #if LACE_USE_HWLOC
 #include <hwloc.h>
@@ -392,22 +393,6 @@ lace_pin_worker(void)
 #endif
 }
 
-/* Set Affinity of a thread */
-void affinity_set_cpu(int _id) {
-	/* Change this for all micro-architectures */
-	unsigned int cpuid;
-    unsigned int numcores = 64;
-	cpu_set_t set;
-	CPU_ZERO(&set);
-    cpuid       = _id % numcores;
-    CPU_SET(cpuid,&set);
-	int rc = sched_setaffinity(0,sizeof(cpu_set_t),&set);
-	if(rc != 0) {
-		fprintf(stderr,"Set Affinity failed for tid#%u\n",_id);
-		exit(EXIT_FAILURE);
-	}
-}
-
 
 void
 lace_init_worker(unsigned int worker)
@@ -418,7 +403,7 @@ lace_init_worker(unsigned int worker)
     // int rc = system(buf);
     // printf("%d\n",rc);
     //printf("Worker-%d\n",worker);
-    affinity_set_cpu(worker+1);
+    affinity_set_cpu2(worker+1);
     //printf("Worker-%d running on cpu-%d\n",worker,sched_getcpu());
 
     // Allocate our memory

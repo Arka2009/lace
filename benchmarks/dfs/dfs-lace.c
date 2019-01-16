@@ -3,13 +3,40 @@
 #include <sys/time.h>
 #include <getopt.h>
 #include <lace.h>
+#include <math.h>
+#include <stdint.h>
+#include <unistd.h>
+#include <ecotools/cpu_uarch.h>
+#include <ecotools/roi_hooks.h>
+
+
+/* Size in bytes */
+#define KB              1024L
+#define MB              1024L*KB
+#define GB              1024L*MB
+#define ARRAYSIZE       128L*MB
 
 static int w, n;
 
-int __attribute__((noinline)) loop()
+
+/* Compute a power series of */
+static double node_computation_function(int N) {
+    int i;
+    double x, sum = 0.0;
+    for (i = 0; i < N; i++) {
+        x = (10 + rand()%100)/220.0;
+        sum += pow(x,i);
+    }
+    // printf("Random Loop Bound = %d\n",N);
+    return sum;
+}
+
+int __attribute__((noinline)) loop(int n2)
 {
     int i, s=0;
 
+    static unsigned int inv = 0;
+    // printf("Entered Node function-%d\n",inv++);
     for( i=0; i<n; i++ ) {
         s += i;
         s *= i;
@@ -17,28 +44,25 @@ int __attribute__((noinline)) loop()
         s *= i;
         s += i;
     }
+    // s = node_computation_function_llist(N,&dlist);
+    // s = node_computation_function(n2);
 
     return s;
 }
 
 TASK_1(int, tree, int, d)
 {
+    // printf("Tree = %d, d = %d\n",tree,d);
+    int n2 = 4;
+    int b = 0;
     if( d>0 ) {
         int i;
         for (i=0;i<w;i++) SPAWN(tree, d-1);
         for (i=0;i<w;i++) SYNC(tree);
         return 0;
     } else {
-        return loop();
+        return loop(n2);    /* Found : Leaf Node is assumed to be found */
     }
-}
-
-double wctime()
-{
-    struct timeval tv;
-    gettimeofday(&tv, NULL);
-    //return (tv.tv_sec + 1E-6 * tv.tv_usec);
-    return (tv.tv_sec * 1E6 + tv.tv_usec);
 }
 
 void usage(char *s)
@@ -47,11 +71,11 @@ void usage(char *s)
 }
 
 
-int main(int argc, char **argv)
-{
+int main(int argc, char **argv) {
     //double t1 = wctime();
-    int workers = 1;
+    int workers = 1, i = 0;
     int dqsize = 100000;
+    affinity_set_cpu2(0);
 
     char c;
     while ((c=getopt(argc, argv, "w:q:h")) != -1) {
@@ -86,17 +110,18 @@ int main(int argc, char **argv)
     n = atoi(argv[optind+2]);
     m = atoi(argv[optind+3]);
 
-    printf("Running depth first search on %d balanced trees with depth %d, width %d, grain %d.\n", m, d, w, n);
+    // printf("Running depth first search on %d balanced trees with depth %d, width %d, grain %d.\n", m, d, w, n);
 
-    double t1 = wctime();
-    int i;
+
+    // __eco_roi_begin();
     for(i=0; i<m; i++) CALL(tree, d);
-    double t2 = wctime();
+    // usleep(2000);
+    // __eco_roi_end();
 
     //printf("Time: %f\n", t2-t1);
 
     lace_exit();
     //double t2 = wctime();
-    printf("Time,%f\n", t2-t1);
+    // printf("Time,%f\n", t2-t1);
     return 0;
 }

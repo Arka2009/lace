@@ -3,6 +3,8 @@
 #include <stdlib.h> // for exit, atoi
 #include <sys/time.h>
 #include <getopt.h>
+#include <ecotools/cpu_uarch.h>
+#include <ecotools/roi_hooks.h>
 
 TASK_1(int, pfib, int, n)
 {
@@ -29,7 +31,7 @@ void usage(char *s)
     fprintf(stderr, "%s -w <workers> [-q dqsize] <n>\n", s);
 }
 
-int main(int argc, char **argv)
+int main2(int argc, char **argv)
 {
     int workers = 1;
     int dqsize = 100000;
@@ -61,16 +63,24 @@ int main(int argc, char **argv)
 
     LACE_ME;
 
-    int n = atoi(argv[optind]);
+    int n = 31 + rand()%8; //atoi(argv[optind]);
 
-    double t1 = wctime();
+    // double t1 = wctime();
+    __eco_roi_begin();
     int m = CALL(pfib, n);
-    double t2 = wctime();
+    // double t2 = wctime();
+    __eco_roi_end();
 
-    printf("fib(%d) = %d\n", n, m);
-    printf("Time: %f\n", t2-t1);
+    // printf("fib(%d) = %d\n", n, m);
+    // printf("Time: %f\n", t2-t1);
 
     lace_exit();
     return 0;
 }
 
+
+int main(int argc, char **argv) {
+    __eco_init();
+    srand(time(0));
+    main2(argc,argv);
+}

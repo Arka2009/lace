@@ -4,6 +4,8 @@
 #include <memory.h>
 #include <sys/time.h>
 #include <getopt.h>
+#include <ecotools/cpu_uarch.h>
+#include <ecotools/roi_hooks.h>
 
 double wctime() 
 {
@@ -68,7 +70,7 @@ void usage(char *s)
     fprintf(stderr, "%s -w <workers> [-q dqsize] <n>\n", s);
 }
 
-int main(int argc, char *argv[])
+int main2(int argc, char *argv[])
 {
     double t1 = wctime();
     int workers = 1;
@@ -101,14 +103,16 @@ int main(int argc, char *argv[])
 
     LACE_ME;
 
-    int n = atoi(argv[optind]);
+    int n = 10 + rand()%3; //atoi(argv[optind]);
 
     char *a = (char*)alloca(n*sizeof(char));
 
     printf("running queens %d with %d workers...\n", n, workers);
 
     //double t1 = wctime();
+    __eco_roi_begin();
     uint64_t res = CALL(nqueens, n, 0, a);
+    __eco_roi_end();
     //double t2 = wctime();
 
     printf("Result: Q(%d) = %lu\n", n, res);
@@ -116,7 +120,13 @@ int main(int argc, char *argv[])
     //printf("Time: %f\n", t2-t1);
 
     lace_exit();
-    double t2 = wctime();
-    printf("Time: %f\n", t2-t1);
+    // double t2 = wctime();
+    // printf("Time: %f\n", t2-t1);
     return 0;
+}
+
+int main(int argc, char **argv) {
+    __eco_init();
+    srand(time(0));
+    main2(argc,argv);
 }

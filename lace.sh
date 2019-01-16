@@ -123,7 +123,7 @@ void lace_init_worker(unsigned int worker);
  * Call this *after* lace_init_worker and *before* lace_run_worker.
  */
 void lace_pin_worker(void);
-void affinity_set_cpu(int _id);
+//void affinity_set_cpu(int _id);
 
 /**
  * Perform work-stealing until lace_exit is called.

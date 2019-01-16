@@ -37,11 +37,11 @@ endif()
 add_library(lace lace.c lace.h)
 target_include_directories(lace PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
 target_compile_options(lace PRIVATE -Wall -Wextra -Werror -fno-strict-aliasing)
-target_link_libraries(lace rt pthread ${HWLOC_LIBRARIES})
+target_link_libraries(lace rt pthread ${HWLOC_LIBRARIES} ecotools)
 
 add_library(lace14 lace14.c lace14.h)
 target_include_directories(lace14 PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
-target_link_libraries(lace14 rt pthread ${HWLOC_LIBRARIES})
+target_link_libraries(lace14 rt pthread ${HWLOC_LIBRARIES} ecotools)
 target_compile_options(lace14 PRIVATE -Wall -Wextra -Werror -fno-strict-aliasing)
 
 set_target_properties(lace lace14 PROPERTIES C_STANDARD 11)
