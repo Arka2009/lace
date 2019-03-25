@@ -35,4 +35,3 @@ for bench in ${benchmarks}; do
 done
 
 chown -R amaity:amaity ${laceroot}
-gcc ptss-wrapper.c -o x86lace.out -llace -llace14 -lpthread -lm -lecotools -lgsl -lgslcblas

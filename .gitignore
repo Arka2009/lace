@@ -5,5 +5,10 @@ CMakeFiles/
 *.out
 *.o
 *.so
+*.ko
 *.a
 *.data
+*.swp
+*.svo
+*.swo
+*.svp
