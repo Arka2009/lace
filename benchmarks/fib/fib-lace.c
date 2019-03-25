@@ -31,8 +31,11 @@ void usage(char *s)
     fprintf(stderr, "%s -w <workers> [-q dqsize] <n>\n", s);
 }
 
-int main2(int argc, char **argv)
+int main(int argc, char **argv)
 {
+#ifdef ECOAFFINE
+    affinity_set_cpu2(0);
+#endif
     int workers = 1;
     int dqsize = 100000;
 
@@ -63,24 +66,23 @@ int main2(int argc, char **argv)
 
     LACE_ME;
 
-    int n = 31 + rand()%8; //atoi(argv[optind]);
-
-    // double t1 = wctime();
-    __eco_roi_begin();
+    int n = atoi(argv[optind]);
+#ifdef ECOPROFILE
+	__eco_roi_start_timer();
+    // PRINTTOPO("Eco Profiler enabled for DFS");
+#endif
     int m = CALL(pfib, n);
-    // double t2 = wctime();
-    __eco_roi_end();
-
-    // printf("fib(%d) = %d\n", n, m);
-    // printf("Time: %f\n", t2-t1);
+#ifdef ECOPROFILE
+	__eco_roi_stop_timer();
+#endif
 
     lace_exit();
     return 0;
 }
 
 
-int main(int argc, char **argv) {
-    __eco_init();
-    srand(time(0));
-    main2(argc,argv);
-}
+//int main(int argc, char **argv) {
+//    __eco_init();
+//    srand(time(0));
+//    main2(argc,argv);
+//}

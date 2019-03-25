@@ -1,3 +1,3 @@
 #!/bin/bash
 
-gcc -I. uts-lace.c -o uts-lace -llace -llace14 -lpthread
+gcc -I. uts-lace.c -o laceuts.out -llace -llace14 -lpthread

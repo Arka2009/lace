@@ -35,6 +35,9 @@ void usage(char *s)
 
 int main(int argc, char **argv)
 {
+#ifdef ECOAFFINE
+    affinity_set_cpu2(0);
+#endif
     int workers = 0;
     int dqsize = 1000000;
 
@@ -67,13 +70,14 @@ int main(int argc, char **argv)
 
     long n = atol(argv[optind]);
 
-    double t1 = wctime();
+#ifdef ECOPROFILE
+	__eco_roi_start_timer();
+    // PRINTTOPO("Eco Profiler enabled for DFS");
+#endif
     double pi = 4.0*(double)CALL(pi_mc, 0, n)/n;
-    double t2 = wctime();
-
-    printf("With %zu workers:\n", lace_workers());
-    printf("pi(%ld) = %.12lf (accuracy: %.12lf)\n", n, pi, fabs(M_PI-pi)/M_PI);
-    printf("Time: %f\n", t2-t1);
+#ifdef ECOPROFILE
+	__eco_roi_stop_timer();
+#endif
 
     lace_exit();
     return 0;

@@ -1,3 +1,3 @@
 #!/bin/bash
 
-gcc queens-lace.c -o queens-lace -llace -llace14 -lpthread -lecotools
+gcc queens-lace.c -o lacequeens.out -llace -llace14 -lpthread -lecotools

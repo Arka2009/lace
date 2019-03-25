@@ -1,3 +1,9 @@
 # Build
 build/
 synth_sp_lace/
+CMakeFiles/
+*.out
+*.o
+*.so
+*.a
+*.data

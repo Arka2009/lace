@@ -714,6 +714,9 @@ void usage(char *s)
 
 int main(int argc, char *argv[])
 {
+#ifdef ECOAFFINE
+    affinity_set_cpu2(0);
+#endif
     int workers = 1;
     int dqsize = 100000;
     int verify = 0;
@@ -766,9 +769,9 @@ int main(int argc, char *argv[])
 
     LACE_ME;
 
-    double t1=wctime();
+    //double t1=wctime();
     CALL(OptimizedStrassenMultiply, C2, A, B, n, n, n, n);
-    double t2=wctime();
+    //double t2=wctime();
 
     if (verify) {
         matrixmul(n, A, n, B, n, C1, n);
@@ -778,7 +781,7 @@ int main(int argc, char *argv[])
     if (verify)
         printf("WRONG RESULT!\n");
     else {	
-        printf("Time: %f\n", t2-t1);
+        //printf("Time: %f\n", t2-t1);
     }
 
     lace_exit();

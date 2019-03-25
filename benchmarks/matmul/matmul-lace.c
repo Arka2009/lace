@@ -119,6 +119,9 @@ void usage(char *s)
 
 int main(int argc, char *argv[])
 {
+#ifdef ECOAFFINE
+    affinity_set_cpu2(0);
+#endif
     int workers = 1;
     int dqsize = 100000;
 

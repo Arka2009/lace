@@ -1,3 +1,3 @@
 #!/bin/bash
 
-gcc knapsack-lace.c -o knapsack-lace -llace -llace14 -lpthread
+gcc knapsack-lace.c -o laceknapsack.out -llace -llace14 -lpthread

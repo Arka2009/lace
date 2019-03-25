@@ -75,7 +75,9 @@ int main(int argc, char **argv) {
     //double t1 = wctime();
     int workers = 1, i = 0;
     int dqsize = 100000;
+#ifdef ECOAFFINE
     affinity_set_cpu2(0);
+#endif
 
     char c;
     while ((c=getopt(argc, argv, "w:q:h")) != -1) {
@@ -110,18 +112,15 @@ int main(int argc, char **argv) {
     n = atoi(argv[optind+2]);
     m = atoi(argv[optind+3]);
 
-    // printf("Running depth first search on %d balanced trees with depth %d, width %d, grain %d.\n", m, d, w, n);
-
-
-    // __eco_roi_begin();
+#ifdef ECOPROFILE
+	__eco_roi_start_timer();
+    // PRINTTOPO("Eco Profiler enabled for DFS");
+#endif
     for(i=0; i<m; i++) CALL(tree, d);
-    // usleep(2000);
-    // __eco_roi_end();
-
-    //printf("Time: %f\n", t2-t1);
+#ifdef ECOPROFILE
+	__eco_roi_stop_timer();
+#endif
 
     lace_exit();
-    //double t2 = wctime();
-    // printf("Time,%f\n", t2-t1);
     return 0;
 }

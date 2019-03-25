@@ -138,6 +138,9 @@ void lace_parseParams(int* argc_p, char *argv[])
 
 
 int main(int argc, char *argv[]) {
+#ifdef ECOAFFINE
+    affinity_set_cpu2(0);
+#endif
   Node root;
   double t1, t2;
 

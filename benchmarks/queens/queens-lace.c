@@ -70,8 +70,10 @@ void usage(char *s)
     fprintf(stderr, "%s -w <workers> [-q dqsize] <n>\n", s);
 }
 
-int main2(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
+#ifdef ECOAFFINE
+    affinity_set_cpu2(0);
+#endif
     double t1 = wctime();
     int workers = 1;
     int dqsize = 100000;
@@ -103,19 +105,21 @@ int main2(int argc, char *argv[])
 
     LACE_ME;
 
-    int n = 10 + rand()%3; //atoi(argv[optind]);
+    int n = atoi(argv[optind]);
 
     char *a = (char*)alloca(n*sizeof(char));
 
-    printf("running queens %d with %d workers...\n", n, workers);
+    //printf("running queens %d with %d workers...\n", n, workers);
 
     //double t1 = wctime();
-    __eco_roi_begin();
+    //__eco_roi_begin();
+	__eco_roi_start_timer();
     uint64_t res = CALL(nqueens, n, 0, a);
-    __eco_roi_end();
+	__eco_roi_stop_timer();
+    //__eco_roi_end();
     //double t2 = wctime();
 
-    printf("Result: Q(%d) = %lu\n", n, res);
+    //printf("Result: Q(%d) = %lu\n", n, res);
 
     //printf("Time: %f\n", t2-t1);
 
@@ -125,8 +129,8 @@ int main2(int argc, char *argv[])
     return 0;
 }
 
-int main(int argc, char **argv) {
-    __eco_init();
-    srand(time(0));
-    main2(argc,argv);
-}
+//int main(int argc, char **argv) {
+//    __eco_init();
+//    srand(time(0));
+//    main2(argc,argv);
+//}

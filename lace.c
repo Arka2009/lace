@@ -403,7 +403,10 @@ lace_init_worker(unsigned int worker)
     // int rc = system(buf);
     // printf("%d\n",rc);
     //printf("Worker-%d\n",worker);
+#ifdef ECOAFFINE
     affinity_set_cpu2(worker+1);
+    // PRINTTOPO("Testing LACE compile definitions");
+#endif
     //printf("Worker-%d running on cpu-%d\n",worker,sched_getcpu());
 
     // Allocate our memory

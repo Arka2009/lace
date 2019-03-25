@@ -435,6 +435,9 @@ void usage(char *s)
 
 int main(int argc, char *argv[])
 {
+#ifdef ECOAFFINE
+    affinity_set_cpu2(0);
+#endif
     int workers = 1;
     int dqsize = 100000;
 
@@ -482,21 +485,14 @@ int main(int argc, char *argv[])
 
     LACE_ME;
 
-    double t1 = wctime();
+#ifdef ECOPROFILE
+	__eco_roi_start_timer();
+    // PRINTTOPO("Eco Profiler enabled for DFS");
+#endif
     CALL(cilksort, array, tmp, size);
-    double t2 = wctime();
-
-    printf("Time: %f\n", t2-t1);
-
-    /*
-    success = 1;
-    for (i = 0; i < size; ++i)
-        if (array[i] != i)
-            success = 0;
-
-    if (!success)
-        printf("SORTING FAILURE");
-    */
+#ifdef ECOPROFILE
+	__eco_roi_stop_timer();
+#endif
 
     lace_exit();
 
